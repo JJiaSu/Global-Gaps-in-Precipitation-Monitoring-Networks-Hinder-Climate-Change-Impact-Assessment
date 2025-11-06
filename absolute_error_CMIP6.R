@@ -16,28 +16,25 @@ gc()
 
 crs_84 <- st_crs("EPSG:4326")  ## WGS 84 大地坐标
 crs_al <- st_crs("+proj=aea +lat_1=25 +lat_2=47 +lon_0=105") ## Albers Equal Area Conic投影
-same_var <- c('stationName','stationID','DATE', 'latitude','longitude',
-              'elevation','YEAR','MONTH','DAY','PRCP.VALUE', 'period','SouTP')
 
-
-data.dir = "F:/sujiajia_2/data"
+#set your working directory
+data.dir = "F:/sujiajia_2/data/sample_data"
 proj.geo = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0 "
 
 
 #import continet boundary
-continent.shp<-readOGR(paste0(data.dir,"/globalCountry/continent_shp/continents.shp"))
+continent.shp<-readOGR(paste0(data.dir,"/globalCountry/continents.shp"))
 projection(continent.shp) = '+proj=longlat +datum=WGS84 +no_defs '
 
 #remove the Antarctica
 continent.shp <- subset(continent.shp, OBJECTID!= 8)
-# import global boundary
-global.shp<-readOGR(paste0(data.dir,"/globalCountry/countries.shp"))
-projection(global.shp) = '+proj=longlat +datum=WGS84 +no_defs '
-st_crs(global.shp)
+
 
 # get the observed and unobserved zone ------------------------------------
 gaugeDen.df<-fread(paste0(data.dir,
-                          '/precipitation_gauges/fig/valid_loc_gauge_density_1degree.csv'))
+                          '/sample_gauge_density_1degree.csv'))
+
+
 unobserved_mask<-rasterFromXYZ(data.frame(lon=gaugeDen.df$lon,
                                           lat = gaugeDen.df$lat,
                                           density = gaugeDen.df$density),
@@ -55,14 +52,10 @@ hur:Relative Humidity [%]
 evspsbl:water evapotranspiration flux，kg m-2 s-1
 emibc:Total Emission Rate of Black Carbon Aerosol Mass [kg m-2 s-1]
 '
-ClimateModels = c('CESM2-WACCM','FGOALS-g3','BCC-CSM2-MR',
-                  'MRI-ESM2-0','MIROC6','AWI-CM-1-1-MR',
-                  'MPI-ESM1-2-LR','TaiESM1',
-                  'CMCC-ESM2','CMCC-CM2-SR5','NorESM2-MM',
-                  'NorESM2-LM','ACCESS-ESM1-5')# 
+ClimateModels = c('CESM2-WACCM')# 
 
 #'ssp245','ssp370',
-ClimateCondition = c('ssp126','ssp585')
+ClimateCondition = c('ssp585')
 CMIP_Variables = c('tas','evspsbl')#'hur',,'emibc'
 
 pr_Variables<-c('pr')
@@ -366,13 +359,13 @@ for (ssp in 1:length(ClimateCondition)) { #SSP
     }
 
     write.table(R_record,
-                paste0(data.dir,'/precipitation_gauges/PreErro/',
+                paste0(data.dir,'/PreErro/',
                        ClimateCondition[ssp],'_',ClimateModels[model],
                        '_RF_var_explained.csv'),row.names = F,
                 col.names=TRUE,sep=",",quote=F)
     
     write.table(explained_record,
-                paste0(data.dir,'/precipitation_gauges/PreErro/',
+                paste0(data.dir,'/PreErro/',
                        ClimateCondition[ssp],'_',ClimateModels[model],
                        '_RF_var_explained_each.csv'),row.names = F,
                 col.names=TRUE,sep=",",quote=F)
@@ -482,15 +475,15 @@ for (ssp in 1:length(ClimateCondition)) { #SSP
     names(resultstack)<-c('corr_test_trend','corr_train_trend',
                           'corr_test_variability','corr_train_variability')
     writeRaster(resultstack,
-                filename=paste0(data.dir,"/precipitation_gauges/PreErro/prediction_error_",
+                filename=paste0(data.dir,"/PreErro/prediction_error_",
                                 ClimateCondition[ssp],'_',ClimateModels[model]),
                 format = 'GTiff',overwrite = TRUE)
     writeRaster(y_test_predict_erro,
-                filename=paste0(data.dir,"/precipitation_gauges/PreErro/y_test_predict_erro_",
+                filename=paste0(data.dir,"/PreErro/y_test_predict_erro_",
                                 ClimateCondition[ssp],'_',ClimateModels[model]),
                 format = 'GTiff',overwrite = TRUE)
     writeRaster(y_train_predict_erro,
-                filename=paste0(data.dir,"/precipitation_gauges/PreErro/y_train_predict_erro",
+                filename=paste0(data.dir,"/PreErro/y_train_predict_erro",
                                 ClimateCondition[ssp],'_',ClimateModels[model]),
                 format = 'GTiff',overwrite = TRUE)
 

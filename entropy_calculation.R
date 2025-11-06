@@ -19,7 +19,9 @@ gc()
 crs_84 <- st_crs("EPSG:4326")  ## WGS 84 大地坐标
 crs_al <- st_crs("+proj=aea +lat_1=25 +lat_2=47 +lon_0=105") ## Albers Equal Area Conic投影
 
-data.dir = "F:/sujiajia_2/data"
+
+#set your working directory
+data.dir = "F:/sujiajia_2/code/station_optimal/Global Gaps in Precipitation Monitoring Networks Hinder Climate Change Impact Assessment/sample_data"
 
 proj.geo = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0 "
 
@@ -27,32 +29,17 @@ proj.geo = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0 "
 
 # # **1.2 start crop extent from here ---------------------------------------
 
-
-#import location of gauges
-newly_loc <- fread(paste0(data.dir,
-                          '/gauge1/location/location_station_valid_from_allstationdata.csv')
-                   ,quote = "",header=TRUE,check.names=F)%>%
-  dplyr::mutate(FID = 1:n())
-newly_loc.df <- newly_loc
-
-coordinates(newly_loc) = ~longitude+latitude
-projection(newly_loc) = proj.geo
-# spplot(newly_loc, "PRCP.VALUE")
-
-
 duration <- c(1900:2022)
 windows <- c(1)
 
 library(rgdal)
-continent.shp<-readOGR(paste0(data.dir,"/globalCountry/continent_shp/continents.shp"))
+continent.shp<-readOGR(paste0(data.dir,"/globalCountry/continents.shp"))
 projection(continent.shp) = '+proj=longlat +datum=WGS84 +no_defs '
 
 
-daily_station<-readRDS(paste0(data.dir,'/precipitation_gauges/MI/stationdata_by_daily.rds'))
+daily_station<-readRDS(paste0(data.dir,'/stationdata_sample.rds'))
 
 
-#get the station within the extent
-pts_ext_original <- newly_loc
 
 # setp2: examine the candidate station importance by entropy-----------------------------------------------
 library(entropy) #discrete
@@ -453,7 +440,7 @@ for (wids in 1:length(windows)) {  #different dynamic window
   
   
   write.table(gaugeEntropy.df,
-              paste0(data.dir,'/precipitation_gauges/MI/1900-22_entropy_by_daily.csv'),row.names = F,
+              paste0(data.dir,'/MI/1900-22_sample_entropy_by_daily.csv'),row.names = F,
               col.names=TRUE,sep=",",quote=F)
   print('write successful')
 }
