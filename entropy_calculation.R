@@ -21,7 +21,7 @@ crs_al <- st_crs("+proj=aea +lat_1=25 +lat_2=47 +lon_0=105") ## Albers Equal Are
 
 
 #set your working directory
-data.dir = "F:/sujiajia_2/code/station_optimal/Global Gaps in Precipitation Monitoring Networks Hinder Climate Change Impact Assessment/sample_data"
+data.dir = "F:/sujiajia_2/sample_data"
 
 proj.geo = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0 "
 
@@ -444,5 +444,6 @@ for (wids in 1:length(windows)) {  #different dynamic window
               col.names=TRUE,sep=",",quote=F)
   print('write successful')
 }
+
 
 
