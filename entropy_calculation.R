@@ -90,6 +90,7 @@ Discretization <- function(x,weishu_add=1){
 # calculate the entropy of each columns
 pts_cadidate_EN<-daily_station %>% 
   group_by(FID) %>% 
+  mutate(PRCP.VALUE = Discretization(PRCP.VALUE)) %>%
   # mutate(preci_log = log(preci)) %>% 
   dplyr::summarise(entropy = entropy::entropy(PRCP.VALUE)) 
 rm(daily_station)
@@ -444,6 +445,7 @@ for (wids in 1:length(windows)) {  #different dynamic window
               col.names=TRUE,sep=",",quote=F)
   print('write successful')
 }
+
 
 
 
