@@ -86,33 +86,33 @@ delta_A =1
 Discretization <- function(x,weishu_add=1){
   floor((x*2+delta_A)/(2*delta_A))*delta_A
 }
-
-# calculate the entropy of each columns
-pts_cadidate_EN<-daily_station %>% 
-  group_by(FID) %>% 
-  mutate(PRCP.VALUE = Discretization(PRCP.VALUE)) %>%
-  # mutate(preci_log = log(preci)) %>% 
-  dplyr::summarise(entropy = entropy::entropy(PRCP.VALUE)) 
-rm(daily_station)
-gc()
-
-na_ranges <- lapply(daily_station_long[-1], function(col) {
-  non_na <- which(!is.na(col))
-  if (length(non_na) == 0) c(Inf, -Inf) else range(non_na)
-})
-
-# calculate the time overlap 
-optimized_calculate_overlap <- function(name, main_range, station_ranges) {
-  station_range <- station_ranges[[name]]
-  if (any(is.infinite(station_range))) return(0)
-  
-  overlap_start <- max(main_range[1], station_range[1])
-  overlap_end <- min(main_range[2], station_range[2])
-  
-  if (overlap_end < overlap_start) 0 else (overlap_end - overlap_start + 1)
-}
-
 for (wids in 1:length(windows)) {  #different dynamic window
+# calculate the entropy of each columns
+  pts_cadidate_EN<-daily_station %>% 
+    group_by(FID) %>% 
+    mutate(PRCP.VALUE = Discretization(PRCP.VALUE)) %>%
+    # mutate(preci_log = log(preci)) %>% 
+    dplyr::summarise(entropy = entropy::entropy(PRCP.VALUE)) 
+  rm(daily_station)
+  gc()
+
+  na_ranges <- lapply(daily_station_long[-1], function(col) {
+    non_na <- which(!is.na(col))
+    if (length(non_na) == 0) c(Inf, -Inf) else range(non_na)
+  })
+
+  # calculate the time overlap 
+  optimized_calculate_overlap <- function(name, main_range, station_ranges) {
+    station_range <- station_ranges[[name]]
+    if (any(is.infinite(station_range))) return(0)
+  
+    overlap_start <- max(main_range[1], station_range[1])
+    overlap_end <- min(main_range[2], station_range[2])
+  
+    if (overlap_end < overlap_start) 0 else (overlap_end - overlap_start + 1)
+  }
+
+
   
   # MI_all<-c()
   MI_all<-c()  #256
@@ -445,6 +445,7 @@ for (wids in 1:length(windows)) {  #different dynamic window
               col.names=TRUE,sep=",",quote=F)
   print('write successful')
 }
+
 
 
 
