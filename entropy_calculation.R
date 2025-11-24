@@ -86,16 +86,16 @@ delta_A =1
 Discretization <- function(x,weishu_add=1){
   floor((x*2+delta_A)/(2*delta_A))*delta_A
 }
-for (wids in 1:length(windows)) {  #different dynamic window
 # calculate the entropy of each columns
   pts_cadidate_EN<-daily_station %>% 
     group_by(FID) %>% 
     mutate(PRCP.VALUE = Discretization(PRCP.VALUE)) %>%
     # mutate(preci_log = log(preci)) %>% 
     dplyr::summarise(entropy = entropy::entropy(PRCP.VALUE)) 
- # rm(daily_station)
+  rm(daily_station)
   gc()
 
+for (wids in 1:length(windows)) {  #different dynamic window
   na_ranges <- lapply(daily_station_long[-1], function(col) {
     non_na <- which(!is.na(col))
     if (length(non_na) == 0) c(Inf, -Inf) else range(non_na)
@@ -445,6 +445,7 @@ for (wids in 1:length(windows)) {  #different dynamic window
               col.names=TRUE,sep=",",quote=F)
   print('write successful')
 }
+
 
 
 
