@@ -93,7 +93,7 @@ for (wids in 1:length(windows)) {  #different dynamic window
     mutate(PRCP.VALUE = Discretization(PRCP.VALUE)) %>%
     # mutate(preci_log = log(preci)) %>% 
     dplyr::summarise(entropy = entropy::entropy(PRCP.VALUE)) 
-  rm(daily_station)
+ # rm(daily_station)
   gc()
 
   na_ranges <- lapply(daily_station_long[-1], function(col) {
@@ -445,6 +445,7 @@ for (wids in 1:length(windows)) {  #different dynamic window
               col.names=TRUE,sep=",",quote=F)
   print('write successful')
 }
+
 
 
 
