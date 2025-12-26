@@ -310,7 +310,7 @@ for (ssp in 1:length(ClimateCondition)) { #SSP
 
 
       pred <- predict(rf.fit1, newdata = test_data)
-      rmse <- sqrt(mean((test_data$pr - pred)^2))  # 回归问题评估
+      rmse <- sqrt(mean((test_data$pr - pred)^2))  
       # 计算R²
       test_r2 <- 1 - (sum((test_data$pr - pred)^2) /
                         sum((test_data$pr - mean(test_data$pr))^2))
