@@ -15,6 +15,7 @@ library(raster)
 library(ggsignif)
 library(ggsci)
 library(ggforce)
+library(cowplot)
 
 #set your working directory
 data.dir = "F:/sujiajia_2/data"
@@ -908,6 +909,7 @@ as_ggplot(legend_geo.heatmap) -> legend_geo.heatmap1
 # figure 3 ----------------------------------------------------------------
 
 library(cowplot)
+library(ggpubr)
 legend_geo.map <- cowplot::get_legend(
   geo.map +
     theme(legend.key.width = unit(0.95, 'cm'),legend.spacing.y = unit(0.1, 'cm'),
@@ -949,12 +951,12 @@ ggpubr::ggarrange(geo.map_1_fig.ls$percent_rank_level_EWM_His,
 )
 ggsave( paste0(data.dir,
                "/precipitation_gauges/fig/sample_data/figure3.png"),
-        dpi = 400,
+        dpi = 600,
         width = 85, height = 100,units = 'mm')#width = 305, height = 320,
 
 ggsave(  paste0(data.dir,
                 "/precipitation_gauges/fig/sample_data/figure3.pdf"),
-        dpi = 400,
+        dpi = 600,
         width = 85, height = 90,units = 'mm', device = cairo_pdf)
 
 # figure 4 ----------------------------------------------------------------
@@ -1038,10 +1040,10 @@ ggdraw(arrange.plot) +
 # dev.off()
 ggsave( paste0(data.dir,
                "/precipitation_gauges/fig/sample_data/figure4.png"),
-        dpi = 400,
+        dpi = 600,
         width =  165, height = 100,
         units = 'mm')
 ggsave(  paste0(data.dir,
                 "/precipitation_gauges/fig/sample_data/figure4.pdf"),
-         dpi = 400,
+         dpi = 600,
          width =  165, height = 100,units = 'mm', device = cairo_pdf)
